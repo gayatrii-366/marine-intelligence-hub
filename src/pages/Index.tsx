@@ -12,9 +12,13 @@ import {
   MapPin,
   Package,
   Timer,
-  Activity
+  Activity,
+  Image,
+  Sparkles
 } from "lucide-react";
 import { LiveVideoFeed } from "@/components/dashboard/LiveVideoFeed";
+import { DetectedImagesGallery } from "@/components/dashboard/DetectedImagesGallery";
+import { ImageEnhancement } from "@/components/dashboard/ImageEnhancement";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { HotspotMap } from "@/components/dashboard/HotspotMap";
 import { TrackingTable } from "@/components/dashboard/TrackingTable";
@@ -59,7 +63,7 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-6 py-6">
         <Tabs defaultValue="realtime" className="space-y-6">
-          <TabsList className="bg-secondary/50 p-1">
+          <TabsList className="bg-secondary/50 p-1 flex-wrap h-auto gap-1">
             <TabsTrigger value="realtime" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Eye className="h-4 w-4" />
               Real-Time Monitoring
@@ -67,6 +71,14 @@ const Index = () => {
             <TabsTrigger value="strategic" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <BarChart3 className="h-4 w-4" />
               Strategic Insights
+            </TabsTrigger>
+            <TabsTrigger value="detected" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Image className="h-4 w-4" />
+              Detected Images
+            </TabsTrigger>
+            <TabsTrigger value="enhancement" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Sparkles className="h-4 w-4" />
+              Image Enhancement
             </TabsTrigger>
           </TabsList>
 
@@ -221,6 +233,16 @@ const Index = () => {
                 </div>
               </div>
             </div>
+          </TabsContent>
+
+          {/* Detected Images Tab */}
+          <TabsContent value="detected">
+            <DetectedImagesGallery />
+          </TabsContent>
+
+          {/* Image Enhancement Tab */}
+          <TabsContent value="enhancement">
+            <ImageEnhancement />
           </TabsContent>
         </Tabs>
       </main>
