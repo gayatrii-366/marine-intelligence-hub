@@ -4,43 +4,44 @@
 
 @layer base {
   :root {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 14%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 14%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 187 85% 53%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 187 85% 43%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
     --accent: 160 84% 39%;
-    --accent-foreground: 210 40% 98%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 25%;
-    --input: 217 33% 25%;
-    --ring: 187 85% 53%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 187 85% 43%;
     --radius: 0.75rem;
     
-    /* Custom oceanic tokens */
-    --ocean-deep: 222 47% 8%;
-    --ocean-surface: 200 60% 20%;
-    --cyan-glow: 187 85% 53%;
+    /* Custom oceanic tokens - light */
+    --ocean-deep: 222 47% 95%;
+    --ocean-mid: 210 40% 90%;
+    --ocean-surface: 200 60% 85%;
+    --cyan-glow: 187 85% 43%;
     --teal-accent: 160 84% 39%;
     --warning: 38 92% 50%;
     --warning-foreground: 222 47% 11%;
 
-    --sidebar-background: 222 47% 8%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 187 85% 53%;
-    --sidebar-primary-foreground: 222 47% 11%;
-    --sidebar-accent: 217 33% 17%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217 33% 25%;
-    --sidebar-ring: 187 85% 53%;
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 187 85% 43%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 187 85% 43%;
   }
 
   .dark {
@@ -63,6 +64,24 @@
     --border: 217 33% 25%;
     --input: 217 33% 25%;
     --ring: 187 85% 53%;
+    
+    /* Custom oceanic tokens - dark */
+    --ocean-deep: 222 47% 8%;
+    --ocean-mid: 222 47% 12%;
+    --ocean-surface: 200 60% 20%;
+    --cyan-glow: 187 85% 53%;
+    --teal-accent: 160 84% 39%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
+
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 187 85% 53%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 25%;
+    --sidebar-ring: 187 85% 53%;
   }
 }
 
@@ -101,4 +120,17 @@
 
 .animate-scan-line {
   animation: scan-line 3s linear infinite;
+}
+
+/* Ocean gradients */
+.bg-ocean-deep {
+  background-color: hsl(var(--ocean-deep));
+}
+
+.bg-ocean-mid {
+  background-color: hsl(var(--ocean-mid));
+}
+
+.bg-ocean-surface {
+  background-color: hsl(var(--ocean-surface));
 }

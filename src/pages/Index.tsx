@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { 
-  Waves, 
   Eye, 
   BarChart3, 
   Target, 
@@ -14,8 +13,11 @@ import {
   Timer,
   Activity,
   Image,
-  Sparkles
+  Sparkles,
+  Lock
 } from "lucide-react";
+import { useAuth, AppRole } from "@/contexts/AuthContext";
+import Navbar from "@/components/navigation/Navbar";
 import { LiveVideoFeed } from "@/components/dashboard/LiveVideoFeed";
 import { DetectedImagesGallery } from "@/components/dashboard/DetectedImagesGallery";
 import { ImageEnhancement } from "@/components/dashboard/ImageEnhancement";
@@ -24,59 +26,70 @@ import { HotspotMap } from "@/components/dashboard/HotspotMap";
 import { TrackingTable } from "@/components/dashboard/TrackingTable";
 import { InsightCard } from "@/components/dashboard/InsightCard";
 
+// Role permissions
+const rolePermissions: Record<AppRole, {
+  realtime: boolean;
+  strategic: boolean;
+  detected: boolean;
+  enhancement: boolean;
+}> = {
+  analyzer: { realtime: true, strategic: true, detected: true, enhancement: true },
+  detector: { realtime: true, strategic: false, detected: true, enhancement: true },
+  viewer: { realtime: false, strategic: true, detected: false, enhancement: false }
+};
+
 const Index = () => {
+  const { role } = useAuth();
+  const permissions = role ? rolePermissions[role] : rolePermissions.viewer;
+  
+  // Determine default tab based on role
+  const getDefaultTab = () => {
+    if (permissions.realtime) return 'realtime';
+    if (permissions.strategic) return 'strategic';
+    return 'realtime';
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center">
-                <Waves className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold tracking-tight">
-                  Automated Marine Debris Intelligence System
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Real-time underwater debris detection & strategic cleanup planning
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <Badge variant="outline" className="border-accent text-accent gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-                System Online
-              </Badge>
-              <div className="text-right text-sm">
-                <p className="text-muted-foreground">Last Update</p>
-                <p className="font-mono text-xs">
-                  {new Date().toLocaleTimeString()}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-6">
-        <Tabs defaultValue="realtime" className="space-y-6">
+        <Tabs defaultValue={getDefaultTab()} className="space-y-6">
           <TabsList className="bg-secondary/50 p-1 flex-wrap h-auto gap-1">
-            <TabsTrigger value="realtime" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger 
+              value="realtime" 
+              className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              disabled={!permissions.realtime}
+            >
+              {!permissions.realtime && <Lock className="h-3 w-3" />}
               <Eye className="h-4 w-4" />
               Real-Time Monitoring
             </TabsTrigger>
-            <TabsTrigger value="strategic" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger 
+              value="strategic" 
+              className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              disabled={!permissions.strategic}
+            >
+              {!permissions.strategic && <Lock className="h-3 w-3" />}
               <BarChart3 className="h-4 w-4" />
               Strategic Insights
             </TabsTrigger>
-            <TabsTrigger value="detected" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger 
+              value="detected" 
+              className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              disabled={!permissions.detected}
+            >
+              {!permissions.detected && <Lock className="h-3 w-3" />}
               <Image className="h-4 w-4" />
               Detected Images
             </TabsTrigger>
-            <TabsTrigger value="enhancement" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger 
+              value="enhancement" 
+              className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              disabled={!permissions.enhancement}
+            >
+              {!permissions.enhancement && <Lock className="h-3 w-3" />}
               <Sparkles className="h-4 w-4" />
               Image Enhancement
             </TabsTrigger>
