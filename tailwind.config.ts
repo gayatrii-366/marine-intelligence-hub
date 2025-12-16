@@ -59,6 +59,7 @@ export default {
         },
         ocean: {
           deep: "hsl(var(--ocean-deep))",
+          mid: "hsl(var(--ocean-mid))",
           surface: "hsl(var(--ocean-surface))",
         },
         cyan: {
