@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, AppRole } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Waves, Mail, Lock, User, AlertCircle } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Waves, Mail, Lock, User, AlertCircle, Sun, Moon, Shield } from 'lucide-react';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 
@@ -14,13 +16,21 @@ const emailSchema = z.string().email('Invalid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
 const nameSchema = z.string().min(2, 'Name must be at least 2 characters');
 
+const roleDescriptions: Record<AppRole, { label: string; description: string }> = {
+  analyzer: { label: 'Analyzer', description: 'Full access to all features and analytics' },
+  detector: { label: 'Detector', description: 'Access to detection and monitoring tools' },
+  viewer: { label: 'Viewer', description: 'View-only access to dashboards' }
+};
+
 const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [selectedRole, setSelectedRole] = useState<AppRole>('viewer');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { signIn, signUp, user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -87,7 +97,7 @@ const Auth = () => {
     if (!validateFields(true)) return;
     
     setIsSubmitting(true);
-    const { error } = await signUp(email, password, fullName);
+    const { error } = await signUp(email, password, fullName, selectedRole);
     setIsSubmitting(false);
 
     if (error) {
@@ -102,7 +112,7 @@ const Auth = () => {
     } else {
       toast({
         title: 'Account created',
-        description: 'Welcome to Marine Debris Intelligence!'
+        description: `Welcome to Marine Debris Intelligence! You've been assigned the ${roleDescriptions[selectedRole].label} role.`
       });
     }
   };
@@ -110,6 +120,21 @@ const Auth = () => {
   return (
     <div className="min-h-screen bg-ocean-deep flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-gradient-to-b from-ocean-deep via-ocean-mid to-ocean-surface opacity-50" />
+      
+      {/* Theme Toggle Button */}
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 z-20 bg-card/80 backdrop-blur-sm border-border hover:bg-muted"
+        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {theme === 'dark' ? (
+          <Sun className="h-5 w-5 text-warning" />
+        ) : (
+          <Moon className="h-5 w-5 text-primary" />
+        )}
+      </Button>
       
       <Card className="w-full max-w-md relative z-10 bg-card/80 backdrop-blur-xl border-cyan-glow/20">
         <CardHeader className="text-center space-y-4">
@@ -243,13 +268,33 @@ const Auth = () => {
                   )}
                 </div>
 
+                <div className="space-y-2">
+                  <Label htmlFor="signup-role">Select Role</Label>
+                  <div className="relative">
+                    <Shield className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+                    <Select value={selectedRole} onValueChange={(value: AppRole) => setSelectedRole(value)}>
+                      <SelectTrigger className="pl-10">
+                        <SelectValue placeholder="Choose your role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(Object.keys(roleDescriptions) as AppRole[]).map((role) => (
+                          <SelectItem key={role} value={role}>
+                            <div className="flex flex-col">
+                              <span className="font-medium">{roleDescriptions[role].label}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {roleDescriptions[role].description}
+                              </span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
                   {isSubmitting ? 'Creating account...' : 'Create Account'}
                 </Button>
-
-                <p className="text-xs text-muted-foreground text-center">
-                  New users are assigned the Viewer role by default.
-                </p>
               </form>
             </TabsContent>
           </Tabs>
