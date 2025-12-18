@@ -9,7 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Waves, Sun, Moon, User, LogOut, Shield } from 'lucide-react';
+import { Waves, Sun, Moon, User, LogOut, Shield, UserPlus, Upload } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 const roleLabels: Record<AppRole, string> = {
   analyzer: 'Analyzer',
@@ -26,6 +28,17 @@ const roleColors: Record<AppRole, string> = {
 const Navbar = () => {
   const { user, role, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleAddAccount = async () => {
+    await signOut();
+    navigate('/auth');
+    toast({
+      title: 'Add New Account',
+      description: 'Sign in or create a new account to add it to this device.'
+    });
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
@@ -41,6 +54,31 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => document.getElementById('navbar-file-upload')?.click()}
+            className="rounded-full"
+            aria-label="Upload images or videos"
+          >
+            <Upload className="h-5 w-5" />
+          </Button>
+          <input
+            id="navbar-file-upload"
+            type="file"
+            accept="image/*,video/*"
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              const files = e.target.files;
+              if (files && files.length > 0) {
+                toast({
+                  title: 'Files selected',
+                  description: `${files.length} file(s) selected for upload.`
+                });
+              }
+            }}
+          />
           <Button
             variant="ghost"
             size="icon"
@@ -80,6 +118,10 @@ const Navbar = () => {
                   </div>
                 </div>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleAddAccount}>
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Add Account
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={signOut} className="text-destructive">
                   <LogOut className="w-4 h-4 mr-2" />
                   Sign Out
