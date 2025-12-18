@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Waves, Mail, Lock, User, AlertCircle, Sun, Moon, Shield } from 'lucide-react';
+import { Waves, Mail, Lock, User, AlertCircle, Sun, Moon, Shield, Upload } from 'lucide-react';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 
@@ -121,20 +121,47 @@ const Auth = () => {
     <div className="min-h-screen bg-ocean-deep flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-gradient-to-b from-ocean-deep via-ocean-mid to-ocean-surface opacity-50" />
       
-      {/* Theme Toggle Button */}
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={toggleTheme}
-        className="absolute top-4 right-4 z-20 bg-card/80 backdrop-blur-sm border-border hover:bg-muted"
-        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      >
-        {theme === 'dark' ? (
-          <Sun className="h-5 w-5 text-warning" />
-        ) : (
-          <Moon className="h-5 w-5 text-primary" />
-        )}
-      </Button>
+      {/* Top Action Buttons */}
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => document.getElementById('file-upload')?.click()}
+          className="bg-card/80 backdrop-blur-sm border-border hover:bg-muted"
+          aria-label="Upload images or videos"
+        >
+          <Upload className="h-5 w-5 text-primary" />
+        </Button>
+        <input
+          id="file-upload"
+          type="file"
+          accept="image/*,video/*"
+          multiple
+          className="hidden"
+          onChange={(e) => {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+              toast({
+                title: 'Files selected',
+                description: `${files.length} file(s) ready for upload after sign in.`
+              });
+            }
+          }}
+        />
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={toggleTheme}
+          className="bg-card/80 backdrop-blur-sm border-border hover:bg-muted"
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {theme === 'dark' ? (
+            <Sun className="h-5 w-5 text-warning" />
+          ) : (
+            <Moon className="h-5 w-5 text-primary" />
+          )}
+        </Button>
+      </div>
       
       <Card className="w-full max-w-md relative z-10 bg-card/80 backdrop-blur-xl border-cyan-glow/20">
         <CardHeader className="text-center space-y-4">
