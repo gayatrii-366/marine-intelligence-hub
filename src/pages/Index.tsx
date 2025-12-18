@@ -14,11 +14,13 @@ import {
   Activity,
   Image,
   Sparkles,
-  Lock
+  Lock,
+  Film
 } from "lucide-react";
 import { useAuth, AppRole } from "@/contexts/AuthContext";
 import Navbar from "@/components/navigation/Navbar";
 import { LiveVideoFeed } from "@/components/dashboard/LiveVideoFeed";
+import { MediaFeed } from "@/components/dashboard/MediaFeed";
 import { DetectedImagesGallery } from "@/components/dashboard/DetectedImagesGallery";
 import { ImageEnhancement } from "@/components/dashboard/ImageEnhancement";
 import { MetricCard } from "@/components/dashboard/MetricCard";
@@ -29,13 +31,14 @@ import { InsightCard } from "@/components/dashboard/InsightCard";
 // Role permissions
 const rolePermissions: Record<AppRole, {
   realtime: boolean;
+  mediafeed: boolean;
   strategic: boolean;
   detected: boolean;
   enhancement: boolean;
 }> = {
-  analyzer: { realtime: true, strategic: true, detected: true, enhancement: true },
-  detector: { realtime: true, strategic: false, detected: true, enhancement: true },
-  viewer: { realtime: false, strategic: true, detected: false, enhancement: false }
+  analyzer: { realtime: true, mediafeed: true, strategic: true, detected: true, enhancement: true },
+  detector: { realtime: true, mediafeed: true, strategic: false, detected: true, enhancement: true },
+  viewer: { realtime: false, mediafeed: true, strategic: true, detected: false, enhancement: false }
 };
 
 const Index = () => {
@@ -45,6 +48,7 @@ const Index = () => {
   // Determine default tab based on role
   const getDefaultTab = () => {
     if (permissions.realtime) return 'realtime';
+    if (permissions.mediafeed) return 'mediafeed';
     if (permissions.strategic) return 'strategic';
     return 'realtime';
   };
@@ -65,6 +69,15 @@ const Index = () => {
               {!permissions.realtime && <Lock className="h-3 w-3" />}
               <Eye className="h-4 w-4" />
               Real-Time Monitoring
+            </TabsTrigger>
+            <TabsTrigger 
+              value="mediafeed" 
+              className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              disabled={!permissions.mediafeed}
+            >
+              {!permissions.mediafeed && <Lock className="h-3 w-3" />}
+              <Film className="h-4 w-4" />
+              Media Feed
             </TabsTrigger>
             <TabsTrigger 
               value="strategic" 
@@ -127,6 +140,18 @@ const Index = () => {
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
               <div className="xl:col-span-2">
                 <LiveVideoFeed />
+              </div>
+              <div className="space-y-6">
+                <TrackingTable />
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Media Feed Tab */}
+          <TabsContent value="mediafeed" className="space-y-6">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              <div className="xl:col-span-2">
+                <MediaFeed />
               </div>
               <div className="space-y-6">
                 <TrackingTable />
