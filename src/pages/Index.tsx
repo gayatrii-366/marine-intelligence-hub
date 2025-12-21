@@ -27,6 +27,7 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { HotspotMap } from "@/components/dashboard/HotspotMap";
 import { TrackingTable } from "@/components/dashboard/TrackingTable";
 import { InsightCard } from "@/components/dashboard/InsightCard";
+import { TutorialDialog } from "@/components/tutorial/TutorialDialog";
 
 // Role permissions
 const rolePermissions: Record<AppRole, {
@@ -42,7 +43,7 @@ const rolePermissions: Record<AppRole, {
 };
 
 const Index = () => {
-  const { role } = useAuth();
+  const { role, user } = useAuth();
   const permissions = role ? rolePermissions[role] : rolePermissions.viewer;
   
   // Determine default tab based on role
@@ -55,6 +56,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {user && <TutorialDialog userId={user.id} />}
       <Navbar />
 
       {/* Main Content */}

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
-import { Waves, Sun, Moon, User, LogOut, Shield, UserPlus, Upload, X, Check } from 'lucide-react';
+import { Waves, Sun, Moon, User, LogOut, Shield, UserPlus, X, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -83,31 +83,6 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => document.getElementById('navbar-file-upload')?.click()}
-            className="rounded-full"
-            aria-label="Upload images or videos"
-          >
-            <Upload className="h-5 w-5" />
-          </Button>
-          <input
-            id="navbar-file-upload"
-            type="file"
-            accept="image/*,video/*"
-            multiple
-            className="hidden"
-            onChange={(e) => {
-              const files = e.target.files;
-              if (files && files.length > 0) {
-                toast({
-                  title: 'Files selected',
-                  description: `${files.length} file(s) selected for upload.`
-                });
-              }
-            }}
-          />
           <Button
             variant="ghost"
             size="icon"
